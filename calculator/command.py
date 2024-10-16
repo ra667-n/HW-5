@@ -1,5 +1,8 @@
-class Command:
-    def execute(self, a, b):
+from abc import ABC, abstractmethod
+
+class Command(ABC):
+    @abstractmethod
+    def execute(self):
         pass
 
 class AddCommand(Command):
