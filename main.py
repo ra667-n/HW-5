@@ -1,7 +1,11 @@
 import sys
 from calculator import Calculator
 from decimal import Decimal, InvalidOperation
+from app import App    
 
+if __name__ == "__main__":
+    app = App().start()  
+    
 def calculate_and_print(a, b, operation_name):
     operation_mappings = {
         'add': Calculator.add,
@@ -32,6 +36,33 @@ def main():
     
     _, a, b, operation = sys.argv
     calculate_and_print(a, b, operation)
+def main():
+    calc = Calculator()
+    plugin_loader.load_plugins(calc)
 
-if __name__ == '__main__':
-    main()
+    while True:
+        user_input = input("Enter command: ").strip().split()
+        if user_input[0].lower() == "exit":
+            break
+        command, *args = user_input
+        try:
+            args = list(map(float, args))
+        except ValueError:
+            print("Error: Arguments must be numbers")
+            continue
+        print(calc.execute(command, *args)) 
+
+def repl():
+    calc = Calculator()
+    calc.load_plugins()
+    while True:
+        user_input = input("Enter command or 'exit': ").strip()
+        if user_input.lower() == 'exit':
+            break
+        try:
+            command, x, y = user_input.split()
+            x, y = float(x), float(y)
+            result = calc.execute_command(command, x, y)
+            print(f"Result: {result}")
+        except Exception as e:
+            print(f"Error: {e}")
